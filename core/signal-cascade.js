@@ -58,3 +58,49 @@ export function runSignals(initiatives, bundle, options = {}) {
 
   return pass2.filter((_, idx) => !removed.has(idx)).sort((a, b) => a.priority - b.priority);
 }
+
+export function runPortfolioSignals(initiatives, signals, portfolioBundle, options = {}) {
+  const { thresholds, evaluators } = portfolioBundle;
+  const ctx = { initiatives, signals, asOfDate: options.asOfDate };
+
+  const portfolioSignals = [];
+  for (const evaluator of evaluators) {
+    try {
+      const result = evaluator.evaluate(ctx, thresholds);
+      if (result && result.length > 0) portfolioSignals.push(...result);
+    } catch (err) {
+      console.warn('[Signal] Portfolio evaluator ' + evaluator.id + ' threw:', err.message);
+    }
+  }
+
+  // Merge portfolio signals with incoming per-initiative signals
+  const merged = [...signals, ...portfolioSignals];
+
+  // Dedup Pass 1 — exact id:initiativeId, higher priority wins
+  const deduped = new Map();
+  for (const signal of merged) {
+    const key = signal.id + ':' + signal.initiativeId;
+    const existing = deduped.get(key);
+    if (!existing || signal.priority < existing.priority) {
+      deduped.set(key, signal);
+    }
+  }
+
+  // Dedup Pass 2 — 0.72 consequence similarity
+  // Portfolio signals (initiativeId: null) only compared against other portfolio signals
+  const pass2 = [...deduped.values()];
+  const removed = new Set();
+  for (let i = 0; i < pass2.length; i++) {
+    if (removed.has(i)) continue;
+    for (let j = i + 1; j < pass2.length; j++) {
+      if (removed.has(j)) continue;
+      if (pass2[i].initiativeId !== pass2[j].initiativeId) continue;
+      if (textSimilarity(pass2[i].consequence || '', pass2[j].consequence || '') >= 0.72) {
+        if (pass2[i].priority <= pass2[j].priority) { removed.add(j); }
+        else { removed.add(i); break; }
+      }
+    }
+  }
+
+  return pass2.filter((_, idx) => !removed.has(idx)).sort((a, b) => a.priority - b.priority);
+}

@@ -102,10 +102,6 @@ const evaluators = [
     }
   },
   {
-    id: 'owner-concentration',
-    evaluate(ctx, thr) { return []; } // Portfolio-level — run separately
-  },
-  {
     id: 'forecast-delta',
     evaluate(ctx, thr) {
       const { initiative } = ctx;

@@ -39,4 +39,4 @@ transformation/
 
 ## Status
 
-Scaffolded — Phase 1 build in progress.
+MVP complete — full view layer (dashboard, heatmap, pipeline, ELT export), signal cascade with 7 evaluators + portfolio-level owner-concentration, Asana adapter, three Lambda handlers, and 155 passing tests including DOM-render regression coverage. Hardening pass applied (CORS lockdown, artifact exclusion, live RAG derivation).

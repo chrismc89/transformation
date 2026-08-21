@@ -1,12 +1,18 @@
 {
   "name": "transformation-pmo",
   "version": "0.1.0",
+  "type": "module",
   "description": "Signal-driven executive cadence for procurement and supply chain transformation programs",
   "main": "index.html",
   "scripts": {
-    "test": "node --experimental-vm-modules tests/run.js"
+    "test": "node --test tests/*.test.js"
   },
   "author": "Chris McCourt",
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1111.0",
+    "jsdom": "^30.0.1",
+    "serve": "^14.2.6"
+  }
 }

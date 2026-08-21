@@ -1,0 +1,528 @@
+/* ==========================================================================
+   Signal Engine — Procurement Transformation PMO
+   Main Stylesheet (extracted from demo HTML)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Design Tokens (CSS Custom Properties)
+   -------------------------------------------------------------------------- */
+:root {
+  --navy: #1A2332;
+  --navy-soft: #26314A;
+  --amber: #C47700;
+  --amber-soft: #F5E3C8;
+  --green: #3F6B4F;
+  --green-soft: #DCE9E0;
+  --red: #A3372A;
+  --red-soft: #F3DAD6;
+  --paper: #F6F5F2;
+  --card: #FFFFFF;
+  --line: #E3E1DA;
+  --ink: #1A2332;
+  --ink-soft: #5B6270;
+}
+
+/* --------------------------------------------------------------------------
+   2. Base / Reset
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+
+h1, h2, h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* --------------------------------------------------------------------------
+   3. Header
+   -------------------------------------------------------------------------- */
+header {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+header .pulse {
+  width: 34px;
+  height: 34px;
+  flex: none;
+}
+
+header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+}
+
+header .sub {
+  font-size: 13px;
+  color: #B9C0CE;
+  margin-top: 2px;
+}
+
+header .meta {
+  text-align: right;
+  font-size: 12px;
+  color: #B9C0CE;
+  line-height: 1.6;
+}
+
+header .meta .cadence {
+  display: inline-block;
+  background: var(--amber);
+  color: #1A2332;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   4. KPI Strip (Metric Cards)
+   -------------------------------------------------------------------------- */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.kpi {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.kpi .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.kpi .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 6px;
+  color: var(--navy);
+}
+
+.kpi .foot {
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+.kpi.accent-green .value {
+  color: var(--green);
+}
+
+.kpi.accent-amber .value {
+  color: var(--amber);
+}
+
+.kpi.accent-red .value {
+  color: var(--red);
+}
+
+/* Section shared */
+section {
+  margin-top: 28px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+
+.section-head h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.section-head .note {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------------------
+   5. Signal Feed (P1–P5 Priority Colors)
+   -------------------------------------------------------------------------- */
+.signal {
+  display: flex;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--ink-soft);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+.signal.p1 {
+  border-left-color: var(--red);
+}
+
+.signal.p2 {
+  border-left-color: var(--amber);
+}
+
+.signal.p3 {
+  border-left-color: #B08A2A;
+}
+
+.signal.p4 {
+  border-left-color: #6B7A8F;
+}
+
+.signal.p5 {
+  border-left-color: #9AA3B2;
+}
+
+.signal .tag {
+  flex: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink-soft);
+  border-radius: 6px;
+  padding: 3px 7px;
+  height: fit-content;
+}
+
+.signal.p1 .tag {
+  background: var(--red);
+}
+
+.signal.p2 .tag {
+  background: var(--amber);
+}
+
+.signal.p3 .tag {
+  background: #B08A2A;
+}
+
+.signal.p4 .tag {
+  background: #6B7A8F;
+}
+
+.signal.p5 .tag {
+  background: #9AA3B2;
+}
+
+.signal .body .title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.signal .body .desc {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.signal .body .action {
+  font-size: 12px;
+  color: var(--navy);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Heatmap Table
+   -------------------------------------------------------------------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+thead th {
+  background: var(--navy);
+  color: #fff;
+  text-align: left;
+  padding: 9px 10px;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+tbody td {
+  padding: 9px 10px;
+  border-top: 1px solid var(--line);
+}
+
+tbody tr:nth-child(even) {
+  background: #FBFAF8;
+}
+
+.rag-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.rag-dot.g {
+  background: var(--green);
+}
+
+.rag-dot.a {
+  background: var(--amber);
+}
+
+.rag-dot.r {
+  background: var(--red);
+}
+
+.cell-g {
+  background: var(--green-soft);
+  color: #2A4A36;
+  font-weight: 600;
+}
+
+.cell-a {
+  background: var(--amber-soft);
+  color: #7A4B00;
+  font-weight: 600;
+}
+
+.cell-r {
+  background: var(--red-soft);
+  color: #7A2418;
+  font-weight: 700;
+}
+
+.num {
+  font-family: 'JetBrains Mono', monospace;
+  text-align: right;
+}
+
+/* Two-column grid layout */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   7. Pipeline Table
+   -------------------------------------------------------------------------- */
+/* Pipeline table reuses the base table styles above.
+   Additional layout handled by .grid-2 context. */
+
+/* --------------------------------------------------------------------------
+   8. Stage Badges
+   -------------------------------------------------------------------------- */
+.stage-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.01em;
+}
+
+.stage-identified {
+  background: #E7E5DE;
+  color: #4A4F58;
+}
+
+.stage-validated {
+  background: var(--amber-soft);
+  color: #7A4B00;
+}
+
+.stage-negotiating {
+  background: #DCE4F0;
+  color: #2A3F63;
+}
+
+.stage-implementing {
+  background: #D8DCE6;
+  color: var(--navy);
+}
+
+.stage-realized {
+  background: var(--green-soft);
+  color: #2A4A36;
+}
+
+/* --------------------------------------------------------------------------
+   9. Sync Badges (Fresh vs Stale)
+   -------------------------------------------------------------------------- */
+.asana-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.asana-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.asana-badge.stale .dot {
+  background: var(--amber);
+}
+
+/* --------------------------------------------------------------------------
+   10. Brief / Summary Card (ELT Export View)
+   -------------------------------------------------------------------------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.brief-card {
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-soft) 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.brief-card h3 {
+  color: #fff;
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+
+.brief-card p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #D9DDE6;
+  margin: 0 0 10px;
+}
+
+.brief-card .stat-row {
+  display: flex;
+  gap: 18px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.brief-card .stat {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.brief-card .stat .n {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.brief-card .stat .l {
+  font-size: 10px;
+  color: #9AA3B2;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.brief-card .export-btn {
+  margin-top: 16px;
+  display: inline-block;
+  background: var(--amber);
+  color: #1A2332;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   11. Chart Wrapper
+   -------------------------------------------------------------------------- */
+.chart-wrap {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px;
+  height: 320px;
+}
+
+/* --------------------------------------------------------------------------
+   12. Footer
+   -------------------------------------------------------------------------- */
+footer {
+  margin-top: 36px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+footer strong {
+  color: var(--navy);
+}
+
+/* --------------------------------------------------------------------------
+   13. Responsive Breakpoint (860px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
