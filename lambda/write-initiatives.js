@@ -17,6 +17,13 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'PUT,OPTIONS',
 };
 
+function isInitiativeShape(item) {
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return false;
+  if (!item.id || !item.name) return false;
+  const savings = item.savings;
+  return savings != null && typeof savings === 'object' && !Array.isArray(savings);
+}
+
 export async function handler(event) {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
@@ -45,9 +52,7 @@ export async function handler(event) {
     }
 
     // Basic schema validation — each item must look like an initiative
-    const invalid = initiatives.filter(
-      (item) => !item || typeof item !== 'object' || !item.id || !item.name || typeof item.savings !== 'object'
-    );
+    const invalid = initiatives.filter((item) => !isInitiativeShape(item));
     if (invalid.length > 0) {
       return {
         statusCode: 400,

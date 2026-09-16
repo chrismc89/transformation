@@ -3,7 +3,7 @@
  * @module views/pipeline-view
  */
 
-import { formatMillions, deriveInitiativeRag } from './view-manager.js';
+import { formatMillions, deriveInitiativeRag, RAG_LABEL } from './view-manager.js';
 
 /** Map pipeline stage to its CSS class suffix */
 const STAGE_CLASS = {
@@ -75,10 +75,12 @@ export function renderPipeline(container, { initiatives, thresholds, signals }) 
   `;
 
   const table = document.createElement('table');
+  table.className = 'data-table';
   table.innerHTML = `
     <thead>
       <tr>
         <th>Initiative</th>
+        <th>RAG</th>
         <th>Owner</th>
         <th>Stage</th>
         <th>Target</th>
@@ -94,7 +96,7 @@ export function renderPipeline(container, { initiatives, thresholds, signals }) 
 
   for (const init of inits) {
     const rag = deriveInitiativeRag(init.id, signals || []);
-    const ragDotClass = `rag-dot ${rag}`;
+    const ragLabel = RAG_LABEL[rag] || RAG_LABEL.g;
     const stage = (init.stage || 'identified').toLowerCase();
     const stageClass = STAGE_CLASS[stage] || STAGE_CLASS.identified;
     const stageLabel = STAGE_LABEL[stage] || STAGE_LABEL.identified;
@@ -110,14 +112,15 @@ export function renderPipeline(container, { initiatives, thresholds, signals }) 
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><span class="${ragDotClass}"></span>${init.name || ''}</td>
-      <td>${init.owner || '—'}</td>
-      <td><span class="stage-badge ${stageClass}">${stageLabel}</span></td>
-      <td class="num mono">${target}</td>
-      <td class="num mono">${validated}</td>
-      <td class="num mono">${realized}</td>
-      <td class="mono">${dueDate}</td>
-      <td><span class="${syncBadgeClass}"><span class="dot"></span>${syncDate}</span></td>
+      <td data-label="Initiative" data-primary>${init.name || ''}</td>
+      <td data-label="RAG"><span class="rag-dot ${rag}"></span>${ragLabel}</td>
+      <td data-label="Owner">${init.owner || '—'}</td>
+      <td data-label="Stage"><span class="stage-badge ${stageClass}">${stageLabel}</span></td>
+      <td data-label="Target" class="num mono">${target}</td>
+      <td data-label="Validated" class="num mono">${validated}</td>
+      <td data-label="Realized" class="num mono">${realized}</td>
+      <td data-label="Due Date" class="mono">${dueDate}</td>
+      <td data-label="Asana Sync"><span class="${syncBadgeClass}"><span class="dot"></span>${syncDate}</span></td>
     `;
     tbody.appendChild(tr);
   }

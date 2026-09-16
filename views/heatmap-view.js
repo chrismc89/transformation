@@ -3,10 +3,7 @@
  * @module views/heatmap-view
  */
 
-import { formatMillions, formatPct, ragClass } from './view-manager.js';
-
-/** RAG status labels for display */
-const RAG_LABEL = { g: 'On Track', a: 'At Risk', r: 'Critical' };
+import { formatMillions, formatPct, ragClass, RAG_LABEL } from './view-manager.js';
 
 /**
  * Render the workstream heatmap table.
@@ -28,6 +25,7 @@ export function renderHeatmap(container, { workstreams, signals, initiatives }) 
   `;
 
   const table = document.createElement('table');
+  table.className = 'data-table';
   table.innerHTML = `
     <thead>
       <tr>
@@ -55,13 +53,13 @@ export function renderHeatmap(container, { workstreams, signals, initiatives }) 
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><strong>${ws.name}</strong></td>
-      <td class="num">${count}</td>
-      <td class="num mono">${formatMillions(ws.target * 1_000_000)}</td>
-      <td class="num mono">${formatMillions(ws.validated * 1_000_000)}</td>
-      <td class="num mono">${formatMillions(ws.realized * 1_000_000)}</td>
-      <td class="num mono ${cellColorClass}">${pctDisplay}</td>
-      <td><span class="rag-dot ${rag}"></span>${RAG_LABEL[rag] || 'On Track'}</td>
+      <td data-label="Workstream" data-primary><strong>${ws.name}</strong></td>
+      <td data-label="Initiatives" class="num">${count}</td>
+      <td data-label="Target" class="num mono">${formatMillions(ws.target * 1_000_000)}</td>
+      <td data-label="Validated" class="num mono">${formatMillions(ws.validated * 1_000_000)}</td>
+      <td data-label="Realized" class="num mono">${formatMillions(ws.realized * 1_000_000)}</td>
+      <td data-label="% to Target" class="num mono ${cellColorClass}">${pctDisplay}</td>
+      <td data-label="RAG"><span class="rag-dot ${rag}"></span>${RAG_LABEL[rag] || 'On Track'}</td>
     `;
     tbody.appendChild(tr);
   }

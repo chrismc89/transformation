@@ -86,4 +86,27 @@ describe('Pipeline View — Real DOM Render with live signals', () => {
       assert.equal(expectedRag, 'g', 'No P1/P2 signals → RAG should be green');
     }
   });
+
+  test('each RAG cell includes the same text label as the heatmap', () => {
+    const labels = { g: 'On Track', a: 'At Risk', r: 'Critical' };
+    const rows = container.querySelectorAll('tbody tr');
+    assert.equal(rows.length, 13);
+    for (let i = 0; i < initiatives.length; i++) {
+      const expectedRag = deriveInitiativeRag(initiatives[i].id, signals);
+      const ragCell = rows[i].querySelector('td[data-label="RAG"]');
+      assert.ok(ragCell, `row ${i} missing RAG cell`);
+      assert.ok(
+        ragCell.textContent.includes(labels[expectedRag]),
+        `row ${i}: expected label "${labels[expectedRag]}", got "${ragCell.textContent}"`
+      );
+    }
+  });
+
+  test('pipeline table cells have data-label attributes for the mobile card layout', () => {
+    const firstRow = container.querySelector('tbody tr');
+    const labels = [...firstRow.querySelectorAll('td')].map((td) => td.getAttribute('data-label'));
+    assert.deepEqual(labels, [
+      'Initiative', 'RAG', 'Owner', 'Stage', 'Target', 'Validated', 'Realized', 'Due Date', 'Asana Sync',
+    ]);
+  });
 });

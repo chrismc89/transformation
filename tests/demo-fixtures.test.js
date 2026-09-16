@@ -35,6 +35,12 @@ test('total realized savings ~$5.35M', () => {
     `Expected total realized ~$5.35M, got $${(totalRealized / 1_000_000).toFixed(2)}M`);
 });
 
+test('no initiative carries a stored rag field', () => {
+  for (const init of initiatives) {
+    assert.equal('rag' in init, false, `Initiative ${init.id} still has a rag field`);
+  }
+});
+
 test('all initiatives have required schema fields', () => {
   const requiredFields = ['id', 'name', 'workstream', 'owner', 'stage', 'savings', 'dueDate', 'asanaProjectId', 'lastSyncedAt', 'createdAt', 'priorValidated'];
   const savingsFields = ['baseline', 'target', 'validated', 'realized'];

@@ -66,4 +66,41 @@ describe('Lambda: write-initiatives', () => {
     const body = JSON.parse(result.body);
     assert.ok(body.error);
   });
+
+  it('returns HTTP 400 when array items are empty objects', async (t) => {
+    t.mock.method(S3Client.prototype, 'send', async () => ({}));
+
+    const result = await handler({
+      httpMethod: 'PUT',
+      body: JSON.stringify([{}]),
+    });
+
+    assert.equal(result.statusCode, 400);
+    const body = JSON.parse(result.body);
+    assert.ok(body.error.includes('Invalid initiative'));
+  });
+
+  it('returns HTTP 400 when savings is not an object', async (t) => {
+    t.mock.method(S3Client.prototype, 'send', async () => ({}));
+
+    const result = await handler({
+      httpMethod: 'PUT',
+      body: JSON.stringify([{ id: 1, name: 'Bad', savings: 'not an object' }]),
+    });
+
+    assert.equal(result.statusCode, 400);
+    const body = JSON.parse(result.body);
+    assert.ok(body.error.includes('Invalid initiative'));
+  });
+
+  it('returns HTTP 400 when savings is null', async (t) => {
+    t.mock.method(S3Client.prototype, 'send', async () => ({}));
+
+    const result = await handler({
+      httpMethod: 'PUT',
+      body: JSON.stringify([{ id: 'init-001', name: 'Bad', savings: null }]),
+    });
+
+    assert.equal(result.statusCode, 400);
+  });
 });

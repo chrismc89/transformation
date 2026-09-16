@@ -2,9 +2,9 @@
  * Tests for view-manager shared utility functions.
  * Verifies formatMillions, formatPct, and ragClass behavior.
  */
-import { formatMillions, formatPct, ragClass, deriveInitiativeRag } from '../views/view-manager.js';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { formatMillions, formatPct, ragClass, deriveInitiativeRag, RAG_LABEL } from '../views/view-manager.js';
 
 // ─── formatMillions ─────────────────────────────────────────────────────────
 
@@ -90,6 +90,12 @@ test('ragClass: undefined → "cell-g" (default)', () => {
 
 test('ragClass: invalid value → "cell-g" (default)', () => {
   assert.equal(ragClass('x'), 'cell-g');
+});
+
+test('RAG_LABEL matches heatmap wording', () => {
+  assert.equal(RAG_LABEL.g, 'On Track');
+  assert.equal(RAG_LABEL.a, 'At Risk');
+  assert.equal(RAG_LABEL.r, 'Critical');
 });
 
 

@@ -52,11 +52,10 @@ export function renderELTExport(container, { summary, signals, initiatives }) {
   `;
   card.appendChild(statRow);
 
-  // Export button
-  const exportBtn = document.createElement('div');
+  const exportBtn = document.createElement('button');
+  exportBtn.type = 'button';
   exportBtn.className = 'export-btn';
-  exportBtn.textContent = 'Export to CFO Deck (PPTX)';
-  exportBtn.style.cursor = 'pointer';
+  exportBtn.textContent = 'Download print-ready brief (HTML)';
   exportBtn.addEventListener('click', () => {
     generateExport(summary, signals, initiatives);
   });

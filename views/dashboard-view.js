@@ -124,19 +124,52 @@ function countAtRiskInitiatives(signals, initiatives) {
 
 // ─── Signal Feed ────────────────────────────────────────────────────────────
 
+/** Default feed shows only P1/P2 — the items that require action this cycle. */
+const SIGNAL_FEED_DEFAULT_MAX_PRIORITY = 2;
+
 /**
- * Render the signal feed sorted P1–P5 with priority styling.
+ * Split signals into the default feed (P1/P2) and lower-priority remainder.
+ * @param {Array} signals
+ * @returns {{ primary: Array, more: Array }}
+ */
+export function partitionSignals(signals) {
+  const sorted = [...(signals || [])].sort((a, b) => a.priority - b.priority);
+  return {
+    primary: sorted.filter((s) => s.priority <= SIGNAL_FEED_DEFAULT_MAX_PRIORITY),
+    more: sorted.filter((s) => s.priority > SIGNAL_FEED_DEFAULT_MAX_PRIORITY),
+  };
+}
+
+function renderSignalEl(sig) {
+  const el = document.createElement('div');
+  el.className = `signal p${sig.priority}`;
+  el.innerHTML = `
+    <span class="tag">P${sig.priority}</span>
+    <div class="body">
+      <div class="title">${sig.title}</div>
+      <div class="desc">${sig.consequence || sig.description || ''}</div>
+      <div class="action">↳ ${sig.action}</div>
+    </div>
+  `;
+  return el;
+}
+
+/**
+ * Render the signal feed: P1/P2 by default, with a toggle for P3–P5.
  */
 function renderSignalFeed(container, signals) {
+  const { primary, more } = partitionSignals(signals);
+
   const section = document.createElement('section');
+  section.className = 'signal-feed';
   section.innerHTML = `
     <div class="section-head">
       <h2>Signal Feed</h2>
-      <span class="note">Sorted by priority (P1 → P5)</span>
+      <span class="note">P1/P2 by default · sorted by priority</span>
     </div>
   `;
 
-  if (!signals || signals.length === 0) {
+  if (primary.length === 0 && more.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'signal';
     empty.innerHTML = `
@@ -150,21 +183,47 @@ function renderSignalFeed(container, signals) {
     return;
   }
 
-  // Sort by priority ascending (P1 first)
-  const sorted = [...signals].sort((a, b) => a.priority - b.priority);
-
-  for (const sig of sorted) {
-    const el = document.createElement('div');
-    el.className = `signal p${sig.priority}`;
-    el.innerHTML = `
-      <span class="tag">P${sig.priority}</span>
+  const primaryWrap = document.createElement('div');
+  primaryWrap.className = 'signal-feed-primary';
+  if (primary.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'signal';
+    empty.innerHTML = `
       <div class="body">
-        <div class="title">${sig.title}</div>
-        <div class="desc">${sig.consequence || sig.description || ''}</div>
-        <div class="action">↳ ${sig.action}</div>
+        <div class="title">No P1/P2 signals</div>
+        <div class="desc">Nothing requires ELT attention this cycle. Lower-priority items are available below.</div>
       </div>
     `;
-    section.appendChild(el);
+    primaryWrap.appendChild(empty);
+  } else {
+    for (const sig of primary) primaryWrap.appendChild(renderSignalEl(sig));
+  }
+  section.appendChild(primaryWrap);
+
+  if (more.length > 0) {
+    const extra = document.createElement('div');
+    extra.className = 'signal-feed-more';
+    extra.hidden = true;
+    extra.id = 'signal-feed-more';
+    for (const sig of more) extra.appendChild(renderSignalEl(sig));
+    section.appendChild(extra);
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'signal-feed-toggle';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', 'signal-feed-more');
+    const noun = more.length === 1 ? 'signal' : 'signals';
+    const collapsedLabel = `Show ${more.length} lower-priority ${noun} (P3–P5)`;
+    const expandedLabel = 'Show fewer signals';
+    toggle.textContent = collapsedLabel;
+    toggle.addEventListener('click', () => {
+      const expand = extra.hidden;
+      extra.hidden = !expand;
+      toggle.setAttribute('aria-expanded', String(expand));
+      toggle.textContent = expand ? expandedLabel : collapsedLabel;
+    });
+    section.appendChild(toggle);
   }
 
   container.appendChild(section);

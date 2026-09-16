@@ -117,6 +117,9 @@ export function ragClass(rag) {
   return `cell-${rag}`;
 }
 
+/** Display labels matching heatmap RAG cells: g → On Track, a → At Risk, r → Critical */
+export const RAG_LABEL = { g: 'On Track', a: 'At Risk', r: 'Critical' };
+
 /**
  * Derive RAG status for a single initiative from the current signal set.
  * P1 → 'r' (red), P2 → 'a' (amber), else → 'g' (green).

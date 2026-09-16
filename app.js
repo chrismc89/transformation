@@ -7,6 +7,7 @@ import config from './config/app-config.js';
 import { initiatives as fixtureInitiatives, programMeta } from './data/demo-fixtures.js';
 import { initViews } from './views/view-manager.js';
 import { runSignals, runPortfolioSignals } from './core/signal-cascade.js';
+import { resolveAsOfDate } from './core/as-of-date.js';
 import ProcurementBundle from './domains/procurement-bundle.js';
 import ProgramBundle from './domains/program-bundle.js';
 import InitiativeStore from './models/initiative-store.js';
@@ -44,11 +45,9 @@ async function init() {
   InitiativeStore.load(initiativeData);
 
   // Step 2: Run signal cascade
-  // Use current date for live data; only use demo date in demo mode
-  const isLiveMode = config.apiUrl && initiativeData !== fixtureInitiatives;
-  const asOfDate = isLiveMode
-    ? new Date()
-    : new Date(programMeta.weekOf + 'T12:00:00Z');
+  // Live API data uses wall-clock time; demo fixtures stay pinned to programMeta.weekOf
+  const isLiveMode = Boolean(config.apiUrl && initiativeData !== fixtureInitiatives);
+  const asOfDate = resolveAsOfDate(isLiveMode, programMeta.weekOf);
 
   const initiativeSignals = runSignals(InitiativeStore.getAll(), ProcurementBundle, { asOfDate });
   const signals = runPortfolioSignals(InitiativeStore.getAll(), initiativeSignals, ProgramBundle, { asOfDate });
