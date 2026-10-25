@@ -8,6 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { initiatives } from '../data/demo-fixtures.js';
 import { formatMillions, formatPct } from '../views/view-manager.js';
+import { partitionSignals } from '../views/dashboard-view.js';
 import config from '../config/app-config.js';
 
 // ─── KPI Calculation Tests ──────────────────────────────────────────────────
@@ -117,13 +118,15 @@ test('Signals sort P1 before P5', () => {
     { priority: 5, title: 'E' },
     { priority: 2, title: 'B' },
   ];
-  const sorted = [...signals].sort((a, b) => a.priority - b.priority);
-  assert.deepEqual(sorted.map(s => s.priority), [1, 2, 3, 5]);
+  const { primary, more } = partitionSignals(signals);
+  assert.deepEqual(primary.map(s => s.priority), [1, 2]);
+  assert.deepEqual(more.map(s => s.priority), [3, 5]);
 });
 
 test('Empty signals array produces empty sorted array', () => {
-  const sorted = [].sort((a, b) => a.priority - b.priority);
-  assert.equal(sorted.length, 0);
+  const { primary, more } = partitionSignals([]);
+  assert.equal(primary.length, 0);
+  assert.equal(more.length, 0);
 });
 
 // ─── Edge Cases ─────────────────────────────────────────────────────────────

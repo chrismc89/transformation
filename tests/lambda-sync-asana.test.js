@@ -131,5 +131,11 @@ describe('Lambda: sync-asana', () => {
     const body = JSON.parse(result.body);
     assert.equal(body.success, true);
     assert.equal(body.updated, 2);
+
+    assert.ok(writeCallBody, 'expected merged initiatives to be written to S3');
+    const written = JSON.parse(writeCallBody);
+    const created = written.find((i) => i.asanaGid === 'task_002');
+    assert.ok(created, 'expected new Asana task to be appended');
+    assert.equal('rag' in created, false, 'new initiatives must not get a stored rag field');
   });
 });
